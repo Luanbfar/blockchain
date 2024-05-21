@@ -4,6 +4,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,27 @@ public class Wallet {
             }
         }
         return total;
+    }
+
+    public Transaction sendFunds(PublicKey receiver, float value) {
+        Transaction result = null;
+        if (getBalance() > value) {
+            ArrayList<TransactionInput> inputs = new ArrayList<>();
+            float total = 0;
+            for (Map.Entry<String, TransactionOutput> item : UTXOs.entrySet()) {
+                TransactionOutput UTXO = item.getValue();
+                total += UTXO.getValue();
+                inputs.add(new TransactionInput(UTXO.getId()));
+                if (total > value) break;
+            }
+            Transaction newTransaction = new Transaction(publicKey, receiver, value, inputs);
+            newTransaction.generateSignature(privateKey);
+            for (TransactionInput input : inputs) {
+                UTXOs.remove(input.getTransactionOutputId());
+            }
+            result = newTransaction;
+        }
+        return result;
     }
 
     public PrivateKey getPrivateKey() {

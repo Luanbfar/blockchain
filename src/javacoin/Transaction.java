@@ -16,19 +16,16 @@ public class Transaction {
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
-    public Transaction(PublicKey from, PublicKey to, float value) {
+    public Transaction(PublicKey from, PublicKey to, float value, ArrayList<TransactionInput> inputs) {
         this.sender = from;
         this.reciever = to;
         this.value = value;
+        this.inputs = inputs;
     }
 
     private String calulateHash() {
         sequence++;
-        return StringUtil.applySha256(
-                StringUtil.getStringFromKey(sender) +
-                        StringUtil.getStringFromKey(reciever) +
-                        Float.toString(value) + sequence
-        );
+        return StringUtil.applySha256(StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciever) + Float.toString(value) + sequence);
     }
 
     public void generateSignature(PrivateKey privateKey) {
@@ -64,8 +61,8 @@ public class Transaction {
             result = "Transaction Signature failed to verify";
         }
         for (TransactionInput i : inputs) {
-            TransactionOutput j = i.getUTXO();
-            j = Main.UTXOs.get(i.getTransactionOutputId());
+            TransactionOutput o = i.getUTXO();
+            o = Main.UTXOs.get(i.getTransactionOutputId());
         }
         if (getInputsValue() < Main.minimumTransaction) {
             result = "Transaction Inputs too small: " + getInputsValue();
@@ -87,6 +84,10 @@ public class Transaction {
 
     public String getTransactionID() {
         return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 
     public PublicKey getSender() {

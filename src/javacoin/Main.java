@@ -10,19 +10,44 @@ public class Main {
     public static float minimumTransaction = 0.1f;
     public static Wallet walletA;
     public static Wallet walletB;
+    public static Transaction genesisTransaction;
 
     void main() {
 
         walletA = new Wallet();
         walletB = new Wallet();
+        Wallet coinbase = new Wallet();
 
-        System.out.println("Private and public keys:");
-        System.out.println(StringUtil.getStringFromKey(walletA.getPrivateKey()));
-        System.out.println(StringUtil.getStringFromKey(walletA.getPublicKey()));
-        Transaction transaction = new Transaction(walletA.getPublicKey(), walletB.getPublicKey(), 5);
-        transaction.generateSignature(walletA.getPrivateKey());
-        System.out.println("Is signature verified");
-        System.out.println(transaction.verifySignature());
+        genesisTransaction = new Transaction(coinbase.getPublicKey(), walletA.getPublicKey(), 100, null);
+        genesisTransaction.generateSignature(coinbase.getPrivateKey());
+        genesisTransaction.setTransactionID("0");
+        genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.getReciever(), genesisTransaction.getValue(), genesisTransaction.getTransactionID()));
+        UTXOs.put(genesisTransaction.outputs.get(0).getId(), genesisTransaction.outputs.get(0));
+        System.out.println("Creating and Mining Genesis block... ");
+        Block genesis = new Block("0");
+        genesis.addTransaction(genesisTransaction);
+        addBlock(genesis);
+
+        Block block1 = new Block(genesis.getHash());
+        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+        System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
+        block1.addTransaction(walletA.sendFunds(walletB.getPublicKey(), 40f));
+        addBlock(block1);
+        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+        System.out.println("WalletB's balance is: " + walletB.getBalance());
+
+        Block block2 = new Block(block1.getHash());
+        System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
+        block2.addTransaction(walletA.sendFunds(walletB.getPublicKey(), 1000f));
+        addBlock(block2);
+        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+        System.out.println("WalletB's balance is: " + walletB.getBalance());
+
+        Block block3 = new Block(block2.getHash());
+        System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
+        block3.addTransaction(walletB.sendFunds(walletA.getPublicKey(), 20));
+        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+        System.out.println("WalletB's balance is: " + walletB.getBalance());
     }
 
     public static String chainValidation() {
@@ -45,5 +70,10 @@ public class Main {
             }
         }
         return result;
+    }
+
+    public static void addBlock(Block newBlock) {
+        newBlock.mineBlock(difficulty);
+        blockchain.add(newBlock);
     }
 }
