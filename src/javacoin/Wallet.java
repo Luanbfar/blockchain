@@ -49,7 +49,7 @@ public class Wallet {
     public Transaction sendFunds(PublicKey receiver, float value) {
         Transaction result = null;
         if (getBalance() > value) {
-            ArrayList<TransactionInput> inputs = new ArrayList<>();
+            ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
             float total = 0;
             for (Map.Entry<String, TransactionOutput> item : UTXOs.entrySet()) {
                 TransactionOutput UTXO = item.getValue();

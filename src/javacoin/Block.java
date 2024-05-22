@@ -9,7 +9,7 @@ public class Block {
     private String merkleRoot;
     private long timeStamp;
     private int nonce;
-    private ArrayList<Transaction> transactions;
+    private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
     public Block(String previousHash) {
         this.previousHash = previousHash;
@@ -34,18 +34,17 @@ public class Block {
         return result;
     }
 
-    public Boolean addTransaction(Transaction transaction) {
-        Boolean result = true;
+    public boolean addTransaction(Transaction transaction) {
         if (transaction == null) {
-            result = false;
+            return false;
         }
         if (previousHash != "0") {
             if (transaction.processTransaction() != "true") {
-                result = false;
+                return false;
             }
         }
         transactions.add(transaction);
-        return result;
+        return true;
     }
 
     public String getHash() {

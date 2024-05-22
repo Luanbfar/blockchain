@@ -3,6 +3,7 @@ package javacoin;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Main {
     public static ArrayList<Block> blockchain = new ArrayList<>();
     public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
@@ -12,7 +13,7 @@ public class Main {
     public static Wallet walletB;
     public static Transaction genesisTransaction;
 
-    void main() {
+    public static void main(String[] args) {
 
         walletA = new Wallet();
         walletB = new Wallet();
@@ -60,13 +61,13 @@ public class Main {
             currentBlock = blockchain.get(i);
             previousBlock = blockchain.get(i - 1);
             if (!currentBlock.getHash().equals(currentBlock.calculateHash())) {
-                result = String.format("Current hashes are not the same at block %s", i + 1);
+                result = String.format("Current hashes are not the same at block %d", i + 1);
             }
             if (!previousBlock.getHash().equals(currentBlock.getPreviousHash())) {
-                result = String.format("Previous hashes are not the same at block %s", i + 1);
+                result = String.format("Previous hashes are not the same at block %d", i + 1);
             }
             if (!currentBlock.getHash().substring(0, difficulty).equals(hashTarget)) {
-                result = String.format("This block hasn't been mined at block %s", i + 1);
+                result = String.format("This block hasn't been mined at block %d", i + 1);
             }
         }
         return result;
