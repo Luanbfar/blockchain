@@ -27,7 +27,7 @@ public class Main {
         System.out.println("Creating and Mining Genesis block... ");
         Block genesis = new Block("0");
         genesis.addTransaction(genesisTransaction);
-        addBlock(genesis);
+        System.out.println(addBlock(genesis));
 
         Block block1 = new Block(genesis.getHash());
         System.out.println("\nWalletA's balance is: " + walletA.getBalance());
@@ -73,8 +73,9 @@ public class Main {
         return result;
     }
 
-    public static void addBlock(Block newBlock) {
-        newBlock.mineBlock(difficulty);
+    public static String addBlock(Block newBlock) {
+        String result = newBlock.mineBlock(difficulty);
         blockchain.add(newBlock);
+        return result;
     }
 }

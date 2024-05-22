@@ -55,17 +55,16 @@ public class Transaction {
         return total;
     }
 
-    public String processTransaction() {
-        String result = "true";
+    public boolean processTransaction() {
+        boolean result = true;
         if (!verifySignature()) {
-            result = "Transaction Signature failed to verify";
+            result = false;
         }
         for (TransactionInput i : inputs) {
-            TransactionOutput o = i.getUTXO();
-            o = Main.UTXOs.get(i.getTransactionOutputId());
+            i.setUTXO(Main.UTXOs.get(i.getTransactionOutputId()));
         }
         if (getInputsValue() < Main.minimumTransaction) {
-            result = "Transaction Inputs too small: " + getInputsValue();
+            result = false;
         }
         float leftOver = getInputsValue() - value;
         transactionID = calulateHash();

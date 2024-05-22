@@ -15,4 +15,7 @@ public class TransactionInput {
     public TransactionOutput getUTXO() {
         return UTXO;
     }
+    public void setUTXO(TransactionOutput UTXO) {
+        this.UTXO = UTXO;
+    }
 }

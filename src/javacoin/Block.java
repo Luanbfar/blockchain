@@ -30,7 +30,7 @@ public class Block {
             nonce++;
             hash = calculateHash();
         }
-        result = "Block mined" + hash;
+        result = "Block mined: " + hash;
         return result;
     }
 
@@ -38,8 +38,8 @@ public class Block {
         if (transaction == null) {
             return false;
         }
-        if (previousHash != "0") {
-            if (transaction.processTransaction() != "true") {
+        if (!"0".equals(previousHash)) {
+            if (transaction.processTransaction() != true) {
                 return false;
             }
         }
