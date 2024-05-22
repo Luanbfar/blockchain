@@ -2,6 +2,12 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/libraries/bcprov_jdk18on_1_78_1.xml
+.idea/libraries/gson_2_6_2.xml
 
 ### Eclipse ###
 .apt_generated

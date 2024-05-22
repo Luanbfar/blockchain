@@ -16,3 +16,7 @@ This project is a blockchain implementation. It includes functionality for creat
 - **Security**: Implement cryptographic techniques to secure the blockchain.
 - **Consensus Algorithm**: Ensure all participants agree on the blockchain's state.
 - **Wallet**: Generate and manage public and private keys for transactions.
+
+## Usage
+
+In order to run the application, the files inside the dependecies folder must be added to the project's classpath.
